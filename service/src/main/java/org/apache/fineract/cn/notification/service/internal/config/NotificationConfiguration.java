@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.cn.notification.service.internal.config;
 
+import jnr.ffi.annotations.In;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.activemq.jms.pool.PooledConnectionFactory;
-import org.apache.activemq.spring.ActiveMQConnectionFactory;
 import org.apache.fineract.cn.anubis.config.EnableAnubis;
 import org.apache.fineract.cn.async.config.EnableAsync;
 import org.apache.fineract.cn.cassandra.config.EnableCassandra;
@@ -108,15 +108,6 @@ public class NotificationConfiguration extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	public PooledConnectionFactory pooledConnectionFactory() {
-		PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory();
-		ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
-		activeMQConnectionFactory.setBrokerURL(this.environment.getProperty("activemq.brokerUrl","vm://localhost?broker.persistent=false"));
-		pooledConnectionFactory.setConnectionFactory(activeMQConnectionFactory);
-		return pooledConnectionFactory;
-	}
-	
-	@Bean
 	public JmsListenerContainerFactory jmsListenerContainerFactory(PooledConnectionFactory jmsFactory) {
 		final DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConnectionFactory(jmsFactory);
@@ -127,16 +118,6 @@ public class NotificationConfiguration extends WebMvcConfigurerAdapter {
 		});
 		factory.setConcurrency(this.environment.getProperty("activemq.concurrency","1-1"));
 		return factory;
-	}
-	
-	@Bean
-	public JmsTemplate jmsTemplate(ApplicationName applicationName, PooledConnectionFactory jmsFactory) {
-		ActiveMQTopic activeMQTopic = new ActiveMQTopic(applicationName.toString());
-		JmsTemplate jmsTemplate = new JmsTemplate();
-		jmsTemplate.setPubSubDomain(true);
-		jmsTemplate.setConnectionFactory(jmsFactory);
-		jmsTemplate.setDefaultDestination(activeMQTopic);
-		return jmsTemplate;
 	}
 	
 	@Bean
