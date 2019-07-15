@@ -27,7 +27,7 @@ import org.apache.fineract.cn.customer.api.v1.client.CustomerManager;
 import org.apache.fineract.cn.identity.api.v1.client.IdentityManager;
 import org.apache.fineract.cn.lang.config.EnableServiceException;
 import org.apache.fineract.cn.lang.config.EnableTenantContext;
-import org.apache.fineract.cn.mariadb.config.EnableMariaDB;
+import org.apache.fineract.cn.postgresql.config.EnablePostgreSQL;
 import org.apache.fineract.cn.notification.service.ServiceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -60,7 +59,7 @@ import java.nio.charset.StandardCharsets;
 @EnableAsync
 @EnableTenantContext
 @EnableCassandra
-@EnableMariaDB
+@EnablePostgreSQL
 @EnableCommandProcessing
 @EnableAnubis
 @EnableServiceException
@@ -87,29 +86,13 @@ import java.nio.charset.StandardCharsets;
 @EntityScan(basePackages = "org.apache.fineract.cn.notification.service.internal.repository")
 public class NotificationConfiguration extends WebMvcConfigurerAdapter {
 	
-	private final Environment environment;
-	
-	public NotificationConfiguration(Environment environment) {
+	public NotificationConfiguration() {
 		super();
-		this.environment = environment;
 	}
 	
 	@Override
 	public void configurePathMatch(final PathMatchConfigurer configurer) {
 		configurer.setUseSuffixPatternMatch(Boolean.FALSE);
-	}
-	
-	@Bean
-	public JmsListenerContainerFactory jmsListenerContainerFactory(PooledConnectionFactory jmsFactory) {
-		final DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-		factory.setConnectionFactory(jmsFactory);
-		factory.setPubSubDomain(true);
-		factory.setConnectionFactory(jmsFactory);
-		factory.setErrorHandler(ex -> {
-			loggerBean().warn(ex.getCause().toString());
-		});
-		factory.setConcurrency(this.environment.getProperty("activemq.concurrency","1-1"));
-		return factory;
 	}
 	
 	@Bean

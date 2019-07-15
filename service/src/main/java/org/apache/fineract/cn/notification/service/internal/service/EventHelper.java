@@ -29,27 +29,27 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("WeakerAccess")
 @Component
 public class EventHelper {
-	private final Gson gson;
-	private final JmsTemplate jmsTemplate;
-	
-	public EventHelper(final @Qualifier(CommandConstants.SERIALIZER) Gson gson, final JmsTemplate jmsTemplate) {
-		this.gson = gson;
-		this.jmsTemplate = jmsTemplate;
-	}
-	
-	public void sendEvent(final String eventName, final String tenantIdentifier, final Object payload) {
-		this.jmsTemplate.convertAndSend(
-				this.gson.toJson(payload),
-				message -> {
-					message.setStringProperty(
-							TenantHeaderFilter.TENANT_HEADER,
-							tenantIdentifier);
-					message.setStringProperty(
-							NotificationEventConstants.SELECTOR_NAME,
-							eventName
-					);
-					return message;
-				}
-		);
-	}
+  private final Gson gson;
+  private final JmsTemplate jmsTemplate;
+
+  public EventHelper(final @Qualifier(CommandConstants.SERIALIZER) Gson gson, final JmsTemplate jmsTemplate) {
+    this.gson = gson;
+    this.jmsTemplate = jmsTemplate;
+  }
+
+  public void sendEvent(final String eventName, final String tenantIdentifier, final Object payload) {
+    this.jmsTemplate.convertAndSend(
+        this.gson.toJson(payload),
+        message -> {
+          message.setStringProperty(
+              TenantHeaderFilter.TENANT_HEADER,
+              tenantIdentifier);
+          message.setStringProperty(
+              NotificationEventConstants.SELECTOR_NAME,
+              eventName
+          );
+          return message;
+        }
+    );
+  }
 }

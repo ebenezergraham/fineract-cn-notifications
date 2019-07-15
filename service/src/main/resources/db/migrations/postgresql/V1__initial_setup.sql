@@ -21,19 +21,18 @@
 -- Table wada_sms_gateway_configurations
 -- -----------------------------------------------------
 CREATE TABLE wada_sms_gateway_configurations (
-  id INT(45) NOT NULL AUTO_INCREMENT,
+  id SMALLSERIAL PRIMARY KEY,
   identifier VARCHAR(45) NULL DEFAULT NULL,
   account_sid VARCHAR(255) NOT NULL,
   auth_token VARCHAR(255) NOT NULL,
   sender_number VARCHAR(45) NOT NULL,
-  state VARCHAR(20) NULL DEFAULT NULL,
-  PRIMARY KEY (id));
+  state VARCHAR(20) NULL DEFAULT NULL);
 
 -- -----------------------------------------------------
 -- Table wada_email_gateway_configurations
 -- -----------------------------------------------------
 CREATE TABLE wada_email_gateway_configurations (
-  id INT NOT NULL AUTO_INCREMENT,
+  id SMALLSERIAL PRIMARY KEY,
   identifier VARCHAR(45) NULL DEFAULT NULL,
   host VARCHAR(45) NOT NULL,
   port VARCHAR(45) NOT NULL,
@@ -42,21 +41,18 @@ CREATE TABLE wada_email_gateway_configurations (
   protocol VARCHAR(45)NOT NULL,
   smtp_auth VARCHAR (45)NOT NULL,
   start_tls VARCHAR (45)NOT NULL,
-  state VARCHAR(10)NOT NULL,
-  PRIMARY KEY (id));
+  state VARCHAR(10)NOT NULL);
 
 -- -----------------------------------------------------
 -- Table wada_templates
 -- -----------------------------------------------------
 CREATE TABLE wada_templates (
-  id INT NOT NULL AUTO_INCREMENT,
+  id SERIAL PRIMARY KEY,
   template_identifier VARCHAR(45) NULL DEFAULT NULL,
   sender_email VARCHAR(255) NULL DEFAULT NULL,
   subject VARCHAR(255) NULL DEFAULT NULL,
   message VARCHAR(1024) NULL DEFAULT NULL,
-  url VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id));
-
+  url VARCHAR(255) NOT NULL);
 
 INSERT INTO wada_sms_gateway_configurations VALUES ('1', 'DEFAULT', 'ACdc00866577a42133e16d98456ad15592', '0b2f78b1c083eb71599d014d1af5748e', '+12055486680', 'ACTIVE');
 INSERT INTO wada_email_gateway_configurations VALUES ('1', 'DEFAULT', 'smtp.gmail.com', '587','fineractcnnotificationdemo@gmail.com', 'pnuugpwmcibipdpw', 'smtp', 'true', 'true', 'ACTIVE');
