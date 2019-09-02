@@ -111,9 +111,8 @@ public class SMSService {
 				new PhoneNumber(receiver),
 				new PhoneNumber(this.senderNumber),
 				template);
-		//Message message = messageCreator.create();
-		
-		System.out.println("\n\n\nsent");
-		return "";//message;
+		Message message = messageCreator.create();
+		logger.info("SMS Transmitted to {}",message.getTo());
+		return message.getTo();
 	}
 }
